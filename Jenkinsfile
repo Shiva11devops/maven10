@@ -7,7 +7,7 @@ pipeline
         {
             steps
             {
-                git 'https://github.com/intelliqittrainings/maven.git'
+                git 'https://github.com/Shiva11devops/maven10.git'
             }
         }
         stage('ContinuousBuild')
@@ -21,15 +21,15 @@ pipeline
         {
             steps
             {
-               deploy adapters: [tomcat9(credentialsId: 'bfb67f1d-2f4e-430c-bb8d-30584116bd00', path: '', url: 'http://172.31.51.212:9090')], contextPath: 'test1', war: '**/*.war'
+               sh 'scp /var/lib/jenkins/workspace/job1/webapp/target/webapp.war ubuntu@172.31.32.29:/var/lib/tomcat9/webapps/webapp2/testapp.war'
             }
         }
         stage('ContinuousTesting')
         {
             steps
             {
-               git 'https://github.com/intelliqittrainings/FunctionalTesting.git'
-               sh 'java -jar /home/ubuntu/.jenkins/workspace/DeclarativePipeline1/testing.jar'
+               git 'https://github.com/Shiva11devops/testing1.git'
+               sh 'java -jar /var/lib/jenkins/workspace/job1/testing.jar'
             }
         }
        
@@ -39,8 +39,8 @@ pipeline
     {
         success
         {
-            input message: 'Need approval from the DM!', submitter: 'srinivas'
-               deploy adapters: [tomcat9(credentialsId: 'bfb67f1d-2f4e-430c-bb8d-30584116bd00', path: '', url: 'http://172.31.50.204:9090')], contextPath: 'prod1', war: '**/*.war'
+            input message: 'Need approval from the DM!', submitter: 'approval'
+               sh 'scp /var/lib/jenkins/workspace/job1/webapp/target/webapp.war ubuntu@172.31.44.139:/var/lib/tomcat9/webapps/webapp2/prodapp.war'
         }
         failure
         {
